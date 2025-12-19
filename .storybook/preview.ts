@@ -15,14 +15,14 @@ const preview: Preview = {
       // 'off' - skip a11y checks entirely
       test: 'todo',
     },
-    // backgrounds: {
-    //   default: 'dark',
-    //   values: [
-    //     { name: 'light', value: '#ffffff' },
-    //     { name: 'dark', value: '#03002C' },
-    //     { name: 'black', value: '#000000' },
-    //   ],
-    // },
+    backgrounds: {
+      default: 'dark',
+      values: [
+        { name: 'light', value: '#ffffff' },
+        { name: 'dark', value: '#03002C' },
+        { name: 'black', value: '#000000' },
+      ],
+    },
   },
 }
 
