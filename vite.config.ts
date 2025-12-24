@@ -3,6 +3,9 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vite.dev/config/
 import path from 'node:path'
@@ -31,6 +34,12 @@ export default defineConfig(({}) => {
             // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
             storybookTest({
               configDir: path.join(dirname, '.storybook'),
+            }),
+            AutoImport({
+              resolvers: [ElementPlusResolver()],
+            }),
+            Components({
+              resolvers: [ElementPlusResolver()],
             }),
           ],
           test: {
