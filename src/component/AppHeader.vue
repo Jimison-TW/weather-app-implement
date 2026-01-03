@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import UnitButton from './UnitButton.vue';
+import UnitButton from './UnitDropdown.vue';
 
 defineProps({
   type: {
