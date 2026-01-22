@@ -38,8 +38,6 @@ const handleSearch = () => {
 </script>
 
 <style scoped lang="scss">
-@import '@/styles/_variables.scss';
-
 .search-bar-wrapper {
   display: flex;
   align-items: center;
