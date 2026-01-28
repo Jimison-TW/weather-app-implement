@@ -10,14 +10,14 @@
     </header>
 
     <div class="list" role="list">
-      <TheHourlyCard v-for="(h, idx) in items" :key="idx" :time="h.time" :icon="h.icon" :temp="h.temp" :unit="h.unit"
+      <HourlyCard v-for="(h, idx) in items" :key="idx" :time="h.time" :icon="h.icon" :temp="h.temp" :unit="h.unit"
         :active="h.active" />
     </div>
   </aside>
 </template>
 
 <script setup lang="ts">
-import TheHourlyCard from './HourlyCard.vue'
+import HourlyCard from './HourlyCard.vue'
 
 interface HourItem {
   time: string

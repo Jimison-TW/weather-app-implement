@@ -5,14 +5,14 @@
     </slot>
 
     <div class="list" role="list">
-      <TheDailyCard v-for="(item, idx) in items" :key="idx" :day="item.day" :icon="item.icon" :high="item.high"
+      <DailyCard v-for="(item, idx) in items" :key="idx" :day="item.day" :icon="item.icon" :high="item.high"
         :low="item.low" />
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import TheDailyCard from './DailyCard.vue'
+import DailyCard from './DailyCard.vue'
 
 interface DayItem {
   day: string

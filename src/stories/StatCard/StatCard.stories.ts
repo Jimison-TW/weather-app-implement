@@ -35,13 +35,13 @@ export const StatBar: Story = {
     value: '',
   },
   render: () => ({
-    components: { TheStatCard: StatCard },
+    components: { StatCard: StatCard },
     template: `
       <div style="display:flex; gap:16px; align-items:flex-start; background: rgba(0,0,0,0); padding: 16px;">
-        <TheStatCard label="Feels Like" value="64" unit="°" />
-        <TheStatCard label="Humidity" value="46" unit="%" />
-        <TheStatCard label="Wind" value="9" unit="mph" />
-        <TheStatCard label="Precipitation" value="0" unit="in" />
+        <StatCard label="Feels Like" value="64" unit="°" />
+        <StatCard label="Humidity" value="46" unit="%" />
+        <StatCard label="Wind" value="9" unit="mph" />
+        <StatCard label="Precipitation" value="0" unit="in" />
       </div>
     `,
   }),
