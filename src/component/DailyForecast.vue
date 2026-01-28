@@ -5,8 +5,10 @@
     </slot>
 
     <div class="list" role="list">
-      <DailyCard v-for="(item, idx) in items" :key="idx" :day="item.day" :icon="item.icon" :high="item.high"
-        :low="item.low" />
+      <slot>
+        <DailyCard v-for="(item, idx) in items" :key="idx" :day="item.day" :icon="item.icon" :high="item.high"
+          :low="item.low" />
+      </slot>
     </div>
   </section>
 </template>
