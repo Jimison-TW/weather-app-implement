@@ -34,10 +34,10 @@ const props = withDefaults(defineProps<{ items?: HourItem[]; days?: string[] }>(
 </script>
 
 <style scoped lang="scss">
-@import '../styles/_variables.scss';
+@use '../styles/_variables.scss' as *;
 
 .hourly-forecast {
-  width: 280px;
+  max-width: 280px;
   background: $neutral-800;
   border-radius: 12px;
   padding: 16px;

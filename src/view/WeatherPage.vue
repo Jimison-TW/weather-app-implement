@@ -22,7 +22,7 @@
 
           <DailyForecast>
             <template #title>
-              <h3 class="title">Daily forecast</h3>
+              <h3 class="forecast-title">Daily forecast</h3>
             </template>
             <template #default>
               <div class="daily-list">
@@ -49,6 +49,14 @@ import StatCard from '@/component/StatCard.vue'
 import DailyForecast from '@/component/DailyForecast.vue'
 import DailyCard from '@/component/DailyCard.vue'
 import HourlyForecast from '@/component/HourlyForecast.vue'
+import sunny from '@/assets/images/icon-sunny.webp'
+import rain from '@/assets/images/icon-rain.webp'
+import cloud from '@/assets/images/icon-overcast.webp'
+import storm from '@/assets/images/icon-storm.webp'
+import snow from '@/assets/images/icon-snow.webp'
+import fog from '@/assets/images/icon-fog.webp'
+import overcast from '@/assets/images/icon-overcast.webp'
+import drizzle from '@/assets/images/icon-drizzle.webp'
 
 const city = ref('Berlin')
 const country = ref('Germany')
@@ -57,24 +65,24 @@ const icon = ref('@/assets/images/icon-sunny.svg')
 const temp = ref(68)
 
 const hourly = ref([
-  { time: '3 PM', icon: undefined, temp: 68, unit: '°' },
-  { time: '4 PM', icon: undefined, temp: 68, unit: '°' },
-  { time: '5 PM', icon: undefined, temp: 68, unit: '°', active: true },
-  { time: '6 PM', icon: undefined, temp: 66, unit: '°' },
-  { time: '7 PM', icon: undefined, temp: 66, unit: '°' },
-  { time: '8 PM', icon: undefined, temp: 64, unit: '°' },
-  { time: '9 PM', icon: undefined, temp: 63, unit: '°' },
-  { time: '10 PM', icon: undefined, temp: 63, unit: '°' },
+  { time: '3 PM', icon: cloud, temp: 68, unit: '°' },
+  { time: '4 PM', icon: overcast, temp: 68, unit: '°' },
+  { time: '5 PM', icon: sunny, temp: 68, unit: '°', active: true },
+  { time: '6 PM', icon: cloud, temp: 66, unit: '°' },
+  { time: '7 PM', icon: snow, temp: 66, unit: '°' },
+  { time: '8 PM', icon: fog, temp: 64, unit: '°' },
+  { time: '9 PM', icon: snow, temp: 63, unit: '°' },
+  { time: '10 PM', icon: cloud, temp: 63, unit: '°' },
 ])
 
 const daily = ref([
-  { day: 'Tue', icon: undefined, high: 68, low: 57 },
-  { day: 'Wed', icon: undefined, high: 70, low: 59 },
-  { day: 'Thu', icon: undefined, high: 75, low: 57 },
-  { day: 'Fri', icon: undefined, high: 77, low: 55 },
-  { day: 'Sat', icon: undefined, high: 70, low: 59 },
-  { day: 'Sun', icon: undefined, high: 77, low: 61 },
-  { day: 'Mon', icon: undefined, high: 75, low: 59 },
+  { day: 'Tue', icon: rain, high: 68, low: 57 },
+  { day: 'Wed', icon: drizzle, high: 70, low: 59 },
+  { day: 'Thu', icon: sunny, high: 75, low: 57 },
+  { day: 'Fri', icon: overcast, high: 77, low: 55 },
+  { day: 'Sat', icon: storm, high: 70, low: 59 },
+  { day: 'Sun', icon: snow, high: 77, low: 61 },
+  { day: 'Mon', icon: fog, high: 75, low: 59 },
 ])
 
 const onSearch = (query: string) => {
@@ -84,7 +92,7 @@ const onSearch = (query: string) => {
 </script>
 
 <style scoped lang="scss">
-@import '../styles/_variables.scss';
+@use '../styles/_variables.scss' as *;
 
 .weather-page {
   min-height: 100vh;
@@ -94,7 +102,7 @@ const onSearch = (query: string) => {
 }
 
 .container {
-  max-width: 1100px;
+  max-width: 950px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -131,15 +139,24 @@ const onSearch = (query: string) => {
 }
 
 .stats-row {
+  width: 100%;
   display: flex;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.forecast-title {
+  font-family: $font-display;
+  font-size: 16px;
+  text-align: left;
+  margin: 12px 0;
 }
 
 .daily-list {
   display: flex;
-  gap: 12px;
-  overflow-x: auto;
+  width: 100%;
+  justify-content: space-between;
 }
 
 @media (max-width: 880px) {
