@@ -1,9 +1,11 @@
 <template>
   <section class="weather-hero" role="region" :aria-label="`${city}, ${country} weather`">
+    <!-- 物理撐開父層的背景圖（使用 <img>） -->
+    <img class="bg-image" :src="bg" alt="weather background" />
+
     <div class="content">
       <div class="location">
-        <div class="city">{{ city }}</div>
-        <div class="country">{{ country }}</div>
+        <div class="city">{{ city + ', ' + country }}</div>
         <div class="date">{{ formattedDate }}</div>
       </div>
       <div class="spacer"></div>
@@ -19,6 +21,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import bg from '@/assets/images/bg-today-large.svg'
 
 interface Props {
   city: string
@@ -37,27 +40,48 @@ const props = withDefaults(defineProps<Props>(), {
 const formattedDate = computed(() => {
   const d = typeof props.date === 'string' ? new Date(props.date) : props.date
   if (!d || isNaN(d.getTime())) return ''
-  return d.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })
+  // 固定使用英語(美式)格式顯示，例如 "Tuesday, Aug 5, 2025"
+  return d.toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
 })
 </script>
 
 <style scoped lang="scss">
 .weather-hero {
   width: 100%;
-  max-width: 800px;
+  height: 100%;
   border-radius: 20px;
-  background-image: url('../assets/images/bg-today-large.svg');
-  background-size: cover;
-  background-position: center;
-  padding: 22px 28px;
+  padding: 0;
+  /* 內容 padding 轉移到 .content，因為 content 為絕對定位 */
   color: $neutral-0;
   box-shadow: 0 8px 30px rgba(7, 7, 17, 0.6);
+  position: relative;
+  /* 預備讓 .content 絕對定位於上方 */
+  overflow: visible;
+}
+
+/* 背景圖：填滿寬度，保持原始比例以物理撐開父層 */
+.bg-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  border-radius: 20px;
 }
 
 .content {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   gap: 24px;
+  padding: 22px 28px;
+  /* 內容內距維持先前樣式 */
+  z-index: 1;
 }
 
 .location {
@@ -89,26 +113,42 @@ const formattedDate = computed(() => {
 .weather {
   display: flex;
   align-items: center;
-  gap: 20px;
+  margin-right: 20px;
 }
 
 .weather-icon {
-  width: 64px;
-  height: 64px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
 }
 
 .temp {
+  position: relative;
   font-size: 64px;
   font-family: $font-display;
-  font-weight: $fw-bold;
+  font-weight: $fw-semibold-italic;
+  font-style: italic;
   line-height: 1;
 }
 
 .unit {
-  font-size: 28px;
-  margin-left: 6px;
+  position: absolute;
+  font-size: 64px;
+  font-weight: $fw-medium;
   color: rgba($white, 0.9);
+  transform: translateY(-10%);
+}
+
+@media (max-width: 480px) {
+  .temp {
+    font-size: 44px;
+  }
+
+  .unit {
+    top: -6px;
+    right: -6px;
+    font-size: 16px;
+  }
 }
 
 @media (max-width: 480px) {

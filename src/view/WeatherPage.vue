@@ -11,7 +11,7 @@
 
       <section class="layout">
         <div class="left-column">
-          <CityBoard :city="city" :country="country" :date="date" :icon="icon" :temp="temp" unit="°F" />
+          <CityBoard :city="city" :country="country" :date="date" :icon="icon" :temp="temp" unit="°" />
 
           <div class="stats-row">
             <StatCard label="Feels Like" :value="64" unit="°" />
@@ -21,9 +21,9 @@
           </div>
 
           <DailyForecast>
-            <template #title>
-              <h3 class="forecast-title">Daily forecast</h3>
-            </template>
+            <!-- <template #title>
+              <h3>Daily forecast</h3>
+            </template> -->
             <template #default>
               <div class="daily-list">
                 <DailyCard v-for="(d, i) in daily" :key="i" :day="d.day" :icon="d.icon" :high="d.high" :low="d.low" />
@@ -61,7 +61,7 @@ import drizzle from '@/assets/images/icon-drizzle.webp'
 const city = ref('Berlin')
 const country = ref('Germany')
 const date = ref(new Date())
-const icon = ref('@/assets/images/icon-sunny.svg')
+const icon = ref(sunny)
 const temp = ref(68)
 
 const hourly = ref([
@@ -98,7 +98,6 @@ const onSearch = (query: string) => {
   min-height: 100vh;
   background: $neutral-900;
   color: $neutral-0;
-  padding: 24px;
 }
 
 .container {
@@ -113,7 +112,6 @@ const onSearch = (query: string) => {
   font-family: $font-display;
   font-size: 36px;
   text-align: center;
-  margin: 12px 0;
 }
 
 .search-row {
@@ -124,13 +122,14 @@ const onSearch = (query: string) => {
 .layout {
   display: flex;
   gap: 24px;
-  align-items: flex-start;
+  align-items: stretch;
 }
 
 .left-column {
   flex: 1;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 18px;
 }
 

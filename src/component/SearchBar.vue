@@ -42,7 +42,9 @@ const handleSearch = () => {
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 600px;
+  /* 縮小至 80% 視覺效果 */
+  max-width: 480px;
+  /* 600px * 0.8 */
   gap: 16px;
 }
 
@@ -51,9 +53,10 @@ const handleSearch = () => {
   align-items: center;
   background-color: $neutral-800;
   border-radius: 12px;
-  padding: 12px 24px;
+  padding: 10px 20px;
+  /* 減小內距 */
   flex: 1;
-  gap: 12px;
+  gap: 10px;
   transition: box-shadow 0.2s;
 
   &:focus-within {
@@ -62,8 +65,8 @@ const handleSearch = () => {
 }
 
 .search-icon {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   color: $neutral-300;
   flex-shrink: 0;
 }
@@ -74,7 +77,8 @@ const handleSearch = () => {
   border: none;
   color: $neutral-0;
   font-family: $font-body;
-  font-size: 16px;
+  font-size: 14px;
+  /* 縮小字級 */
   font-weight: $fw-medium;
   outline: none;
 
@@ -92,14 +96,17 @@ const handleSearch = () => {
   background-color: $blue-500;
   border: none;
   border-radius: 8px;
-  padding: 10px 28px;
+  padding: 8px 22px;
+  /* 減少按鈕內距 */
   color: $neutral-0;
   font-family: $font-body;
-  font-size: 16px;
+  font-size: 14px;
+  /* 縮小字級 */
   font-weight: $fw-semibold;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  height: 48px;
+  height: 38px;
+  /* 縮小高度 */
   box-sizing: border-box;
   display: flex;
   align-items: center;

@@ -25,7 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
 <style scoped lang="scss">
 .stat-card {
   width: 140px;
-  min-height: 96px;
+  min-height: 84px;
   background-color: $neutral-700;
   border-radius: 10px;
   padding: 12px;
@@ -37,18 +37,19 @@ const props = withDefaults(defineProps<Props>(), {
 }
 
 .label {
-  color: $neutral-300;
+  color: $neutral-0;
   font-size: 13px;
-  font-weight: $fw-medium;
+  font-weight: $fw-light;
 }
 
 .value {
   color: $neutral-0;
   font-size: 28px;
-  font-weight: $fw-semibold;
+  font-weight: $fw-light;
   line-height: 1;
   display: flex;
   align-items: baseline;
+  margin-top: 5px;
 
   .unit {
     font-size: 14px;

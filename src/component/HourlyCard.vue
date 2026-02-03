@@ -1,8 +1,8 @@
 <template>
   <div class="hourly-card" :class="{ active }" role="listitem" :aria-label="`Hour ${time} - ${temp}${unit}`">
     <div class="left">
-      <div class="time">{{ time }}</div>
       <img v-if="icon" :src="icon" :alt="`icon ${time}`" class="icon" />
+      <div class="time">{{ time }}</div>
     </div>
     <div class="right">
       <span class="temp">{{ temp }}<span class="unit">{{ unit }}</span></span>
@@ -37,7 +37,7 @@ const { time, icon, temp, unit, active } = props
   justify-content: space-between;
   background: $neutral-700;
   border-radius: 10px;
-  padding: 10px 12px;
+  padding: 7px 12px;
   gap: 12px;
   color: $neutral-0;
   width: 100%;
@@ -61,8 +61,8 @@ const { time, icon, temp, unit, active } = props
   }
 
   .icon {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     object-fit: contain;
   }
 
