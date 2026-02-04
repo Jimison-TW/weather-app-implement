@@ -5,7 +5,7 @@
       <div class="time">{{ time }}</div>
     </div>
     <div class="right">
-      <span class="temp">{{ temp }}<span class="unit">{{ unit }}</span></span>
+      <span class="temp">{{ temp + '°' }}</span>
     </div>
   </div>
 </template>
@@ -67,8 +67,8 @@ const { time, icon, temp, unit, active } = props
   }
 
   .temp {
-    font-weight: $fw-semibold;
-    font-size: 14px;
+    font-weight: $fw-medium;
+    font-size: 12px;
   }
 
   .unit {

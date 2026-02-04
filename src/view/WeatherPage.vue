@@ -11,7 +11,7 @@
 
       <section class="layout">
         <div class="left-column">
-          <CityBoard :city="city" :country="country" :date="date" :icon="icon" :temp="temp" unit="°" />
+          <CityBoard :city="city" :country="country" :date="date" :icon="icon" :temp="temp" />
 
           <div class="stats-row">
             <StatCard label="Feels Like" :value="64" unit="°" />
@@ -49,57 +49,21 @@ import StatCard from '@/component/StatCard.vue'
 import DailyForecast from '@/component/DailyForecast.vue'
 import DailyCard from '@/component/DailyCard.vue'
 import HourlyForecast from '@/component/HourlyForecast.vue'
-import sunny from '@/assets/images/icon-sunny.webp'
-import rain from '@/assets/images/icon-rain.webp'
-import cloud from '@/assets/images/icon-overcast.webp'
-import storm from '@/assets/images/icon-storm.webp'
-import snow from '@/assets/images/icon-snow.webp'
-import fog from '@/assets/images/icon-fog.webp'
-import overcast from '@/assets/images/icon-overcast.webp'
-import drizzle from '@/assets/images/icon-drizzle.webp'
+import { getMockWeather } from '@/data/mockWeather'
+import { UnitType } from '@/const/type'
 
-const city = ref('Berlin')
-const country = ref('Germany')
-const date = ref(new Date())
-const icon = ref(sunny)
-const temp = ref(68)
+// 可參數化單位 (預設為 Imperial)
+const unitType = ref<UnitType>(UnitType.IMPERIAL)
+const { current, hourly: mockHourly, daily: mockDaily } = getMockWeather(unitType.value)
 
-const hourly = ref([
-  { time: '12 AM', icon: cloud, temp: 50, unit: '°' },
-  { time: '1 AM', icon: cloud, temp: 49, unit: '°' },
-  { time: '2 AM', icon: fog, temp: 48, unit: '°' },
-  { time: '3 AM', icon: fog, temp: 47, unit: '°' },
-  { time: '4 AM', icon: drizzle, temp: 46, unit: '°' },
-  { time: '5 AM', icon: drizzle, temp: 46, unit: '°' },
-  { time: '6 AM', icon: rain, temp: 48, unit: '°' },
-  { time: '7 AM', icon: rain, temp: 51, unit: '°' },
-  { time: '8 AM', icon: cloud, temp: 54, unit: '°' },
-  { time: '9 AM', icon: cloud, temp: 58, unit: '°' },
-  { time: '10 AM', icon: sunny, temp: 62, unit: '°' },
-  { time: '11 AM', icon: sunny, temp: 65, unit: '°' },
-  { time: '12 PM', icon: sunny, temp: 68, unit: '°' },
-  { time: '1 PM', icon: sunny, temp: 70, unit: '°' },
-  { time: '2 PM', icon: sunny, temp: 71, unit: '°' },
-  { time: '3 PM', icon: cloud, temp: 70, unit: '°' },
-  { time: '4 PM', icon: overcast, temp: 69, unit: '°' },
-  { time: '5 PM', icon: sunny, temp: 68, unit: '°', active: true },
-  { time: '6 PM', icon: cloud, temp: 66, unit: '°' },
-  { time: '7 PM', icon: storm, temp: 65, unit: '°' },
-  { time: '8 PM', icon: rain, temp: 62, unit: '°' },
-  { time: '9 PM', icon: fog, temp: 59, unit: '°' },
-  { time: '10 PM', icon: snow, temp: 57, unit: '°' },
-  { time: '11 PM', icon: cloud, temp: 55, unit: '°' },
-])
+const city = ref(current.city)
+const country = ref(current.country)
+const date = ref(current.date)
+const icon = ref(current.icon)
+const temp = ref(current.temp)
 
-const daily = ref([
-  { day: 'Tue', icon: rain, high: 68, low: 57 },
-  { day: 'Wed', icon: drizzle, high: 70, low: 59 },
-  { day: 'Thu', icon: sunny, high: 75, low: 57 },
-  { day: 'Fri', icon: overcast, high: 77, low: 55 },
-  { day: 'Sat', icon: storm, high: 70, low: 59 },
-  { day: 'Sun', icon: snow, high: 77, low: 61 },
-  { day: 'Mon', icon: fog, high: 75, low: 59 },
-])
+const hourly = ref(mockHourly)
+const daily = ref(mockDaily)
 
 const onSearch = (query: string) => {
   // 目前只更新城市文字；可在未來加入 API 呼叫

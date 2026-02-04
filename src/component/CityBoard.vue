@@ -12,7 +12,7 @@
       <div class="weather">
         <img v-if="icon" :src="icon" alt="weather icon" class="weather-icon" />
         <div class="temp">
-          {{ temp }}<span class="unit">{{ unit }}</span>
+          {{ temp + '°' }}
         </div>
       </div>
     </div>
@@ -29,12 +29,10 @@ interface Props {
   date: string | Date
   icon?: string
   temp: number | string
-  unit?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   icon: undefined,
-  unit: '°',
 })
 
 const formattedDate = computed(() => {
