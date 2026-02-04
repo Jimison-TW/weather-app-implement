@@ -33,7 +33,7 @@
         </div>
 
         <div class="right-column">
-          <HourlyForecast :items="hourly" :days="['Tuesday']" />
+          <HourlyForecast :items="hourly" />
         </div>
       </section>
     </main>
@@ -65,14 +65,30 @@ const icon = ref(sunny)
 const temp = ref(68)
 
 const hourly = ref([
-  { time: '3 PM', icon: cloud, temp: 68, unit: '°' },
-  { time: '4 PM', icon: overcast, temp: 68, unit: '°' },
+  { time: '12 AM', icon: cloud, temp: 50, unit: '°' },
+  { time: '1 AM', icon: cloud, temp: 49, unit: '°' },
+  { time: '2 AM', icon: fog, temp: 48, unit: '°' },
+  { time: '3 AM', icon: fog, temp: 47, unit: '°' },
+  { time: '4 AM', icon: drizzle, temp: 46, unit: '°' },
+  { time: '5 AM', icon: drizzle, temp: 46, unit: '°' },
+  { time: '6 AM', icon: rain, temp: 48, unit: '°' },
+  { time: '7 AM', icon: rain, temp: 51, unit: '°' },
+  { time: '8 AM', icon: cloud, temp: 54, unit: '°' },
+  { time: '9 AM', icon: cloud, temp: 58, unit: '°' },
+  { time: '10 AM', icon: sunny, temp: 62, unit: '°' },
+  { time: '11 AM', icon: sunny, temp: 65, unit: '°' },
+  { time: '12 PM', icon: sunny, temp: 68, unit: '°' },
+  { time: '1 PM', icon: sunny, temp: 70, unit: '°' },
+  { time: '2 PM', icon: sunny, temp: 71, unit: '°' },
+  { time: '3 PM', icon: cloud, temp: 70, unit: '°' },
+  { time: '4 PM', icon: overcast, temp: 69, unit: '°' },
   { time: '5 PM', icon: sunny, temp: 68, unit: '°', active: true },
   { time: '6 PM', icon: cloud, temp: 66, unit: '°' },
-  { time: '7 PM', icon: snow, temp: 66, unit: '°' },
-  { time: '8 PM', icon: fog, temp: 64, unit: '°' },
-  { time: '9 PM', icon: snow, temp: 63, unit: '°' },
-  { time: '10 PM', icon: cloud, temp: 63, unit: '°' },
+  { time: '7 PM', icon: storm, temp: 65, unit: '°' },
+  { time: '8 PM', icon: rain, temp: 62, unit: '°' },
+  { time: '9 PM', icon: fog, temp: 59, unit: '°' },
+  { time: '10 PM', icon: snow, temp: 57, unit: '°' },
+  { time: '11 PM', icon: cloud, temp: 55, unit: '°' },
 ])
 
 const daily = ref([

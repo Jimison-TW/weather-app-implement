@@ -29,7 +29,7 @@ interface HourItem {
 
 const props = withDefaults(defineProps<{ items?: HourItem[]; days?: string[] }>(), {
   items: () => [],
-  days: () => ['Tuesday'],
+  days: () => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
 })
 </script>
 
@@ -69,9 +69,14 @@ const props = withDefaults(defineProps<{ items?: HourItem[]; days?: string[] }>(
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 520px;
+  /* 顯示 8 張卡片的可滾動區塊：使用固定 max-height（約 8 張卡高度），保持卡片樣式不變 */
+  --hourly-card-height: 56px;
+  /* 保留變數以便未來微調 */
+  max-height: 420px;
+  /* 約略可顯示 8 筆，超出以捲軸瀏覽 */
   overflow-y: auto;
   padding-right: 4px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .list::-webkit-scrollbar {
