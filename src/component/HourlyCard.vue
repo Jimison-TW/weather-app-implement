@@ -1,5 +1,5 @@
 <template>
-  <div class="hourly-card" :class="{ active }" role="listitem" :aria-label="`Hour ${time} - ${temp}${unit}`">
+  <div class="hourly-card" role="listitem" :aria-label="`Hour ${time} - ${temp}${unit}`">
     <div class="left">
       <img v-if="icon" :src="icon" :alt="`icon ${time}`" class="icon" />
       <div class="time">{{ time }}</div>
@@ -16,16 +16,14 @@ interface Props {
   icon?: string
   temp: number | string
   unit?: string
-  active?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   icon: undefined,
   unit: '°',
-  active: false,
 })
 
-const { time, icon, temp, unit, active } = props
+const { time, icon, temp, unit } = props
 </script>
 
 <style scoped lang="scss">

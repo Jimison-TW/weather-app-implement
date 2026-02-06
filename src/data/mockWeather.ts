@@ -9,60 +9,79 @@ import drizzle from '@/assets/images/icon-drizzle.webp'
 
 import { UnitType } from '@/const/type'
 
-export const currentBase = {
-  city: 'Berlin',
-  country: 'Germany',
-  date: new Date('2025-08-05'),
-  icon: sunny,
-  temp: 68,
+// Helper utilities to generate randomized mock values
+function randInt(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-export const hourlyBase = [
-  { time: '12 AM', icon: cloud, temp: 50 },
-  { time: '1 AM', icon: cloud, temp: 49 },
-  { time: '2 AM', icon: fog, temp: 48 },
-  { time: '3 AM', icon: fog, temp: 47 },
-  { time: '4 AM', icon: drizzle, temp: 46 },
-  { time: '5 AM', icon: drizzle, temp: 46 },
-  { time: '6 AM', icon: rain, temp: 48 },
-  { time: '7 AM', icon: rain, temp: 51 },
-  { time: '8 AM', icon: cloud, temp: 54 },
-  { time: '9 AM', icon: cloud, temp: 58 },
-  { time: '10 AM', icon: sunny, temp: 62 },
-  { time: '11 AM', icon: sunny, temp: 65 },
-  { time: '12 PM', icon: sunny, temp: 68 },
-  { time: '1 PM', icon: sunny, temp: 70 },
-  { time: '2 PM', icon: sunny, temp: 71 },
-  { time: '3 PM', icon: cloud, temp: 70 },
-  { time: '4 PM', icon: overcast, temp: 69 },
-  { time: '5 PM', icon: sunny, temp: 68, active: true },
-  { time: '6 PM', icon: cloud, temp: 66 },
-  { time: '7 PM', icon: storm, temp: 65 },
-  { time: '8 PM', icon: rain, temp: 62 },
-  { time: '9 PM', icon: fog, temp: 59 },
-  { time: '10 PM', icon: snow, temp: 57 },
-  { time: '11 PM', icon: cloud, temp: 55 },
-]
+function pick<T>(arr: T[]) {
+  return arr[Math.floor(Math.random() * arr.length)]
+}
 
-export const daily = [
-  { day: 'Tue', icon: rain, high: 68, low: 57 },
-  { day: 'Wed', icon: drizzle, high: 70, low: 59 },
-  { day: 'Thu', icon: sunny, high: 75, low: 57 },
-  { day: 'Fri', icon: overcast, high: 77, low: 55 },
-  { day: 'Sat', icon: storm, high: 70, low: 59 },
-  { day: 'Sun', icon: snow, high: 77, low: 61 },
-  { day: 'Mon', icon: fog, high: 75, low: 59 },
-]
+function to12Hour(hour: number) {
+  const h = hour % 24
+  const period = h < 12 ? 'AM' : 'PM'
+  const displayHour = h % 12 === 0 ? 12 : h % 12
+  return `${displayHour} ${period}`
+}
+
+// array of icons to randomly pick
+const icons = [sunny, rain, cloud, storm, snow, fog, overcast, drizzle]
+
+// generate hourly for 24 hours based on unit type
+function generateHourly(unitType: UnitType) {
+  // base temp in Fahrenheit; convert to Celsius if needed
+  const convert = (f: number) =>
+    unitType === UnitType.IMPERIAL ? f : Math.round((f - 32) * (5 / 9))
+
+  const hours = [] as Array<{
+    time: string
+    icon: string | undefined
+    temp: number
+    active?: boolean
+  }>
+  for (let i = 0; i < 24; i++) {
+    const fTemp = randInt(50, 85) // fahrenheit range
+    hours.push({ time: to12Hour(i), icon: pick(icons), temp: convert(fTemp) })
+  }
+  return hours
+}
+
+// generate daily forecast for next 7 days
+function generateDaily(unitType: UnitType) {
+  // base high/low in Fahrenheit
+  const convert = (f: number) =>
+    unitType === UnitType.IMPERIAL ? f : Math.round((f - 32) * (5 / 9))
+
+  const days = [] as Array<{ day: string; icon: string | undefined; high: number; low: number }>
+  const today = new Date()
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today)
+    d.setDate(today.getDate() + i)
+    const weekday = d.toLocaleDateString('en-US', { weekday: 'short' })
+    const highF = randInt(60, 85)
+    const lowF = highF - randInt(5, 12)
+    days.push({ day: weekday, icon: pick(icons), high: convert(highF), low: convert(lowF) })
+  }
+  return days
+}
 
 export function getUnitSymbol(unitType: UnitType = UnitType.IMPERIAL) {
   return unitType === UnitType.IMPERIAL ? '°F' : '°C'
 }
 
 export function getMockWeather(unitType: UnitType = UnitType.IMPERIAL) {
-  const unit = getUnitSymbol(unitType)
-  return {
-    current: { ...currentBase, unit },
-    hourly: hourlyBase.map((h) => ({ ...h, unit })),
-    daily: daily,
+  const hourly = generateHourly(unitType)
+  const daily = generateDaily(unitType)
+  const now = new Date()
+  const current = {
+    city: 'Berlin',
+    country: 'Germany',
+    date: now,
+    icon: hourly[now.getHours()].icon,
+    temp: hourly[now.getHours()].temp,
+    unit: getUnitSymbol(unitType),
   }
+
+  return { current, hourly, daily }
 }

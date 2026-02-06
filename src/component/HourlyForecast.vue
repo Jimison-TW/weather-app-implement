@@ -10,8 +10,7 @@
     </header>
 
     <div class="list" role="list">
-      <HourlyCard v-for="(h, idx) in items" :key="idx" :time="h.time" :icon="h.icon" :temp="h.temp" :unit="h.unit"
-        :active="h.active" />
+      <HourlyCard v-for="(h, idx) in items" :key="idx" :time="h.time" :icon="h.icon" :temp="h.temp" :unit="h.unit" />
     </div>
   </aside>
 </template>
