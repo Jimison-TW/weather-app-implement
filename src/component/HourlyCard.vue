@@ -1,11 +1,11 @@
 <template>
-  <div class="hourly-card" role="listitem" :aria-label="`Hour ${time} - ${temp}${unit}`">
+  <div class="hourly-card" role="listitem" :aria-label="`Hour ${props.time} - ${props.temp}${props.unit}`">
     <div class="left">
-      <img v-if="icon" :src="icon" :alt="`icon ${time}`" class="icon" />
-      <div class="time">{{ time }}</div>
+      <img v-if="props.icon" :src="props.icon" :alt="`icon ${props.time}`" class="icon" />
+      <div class="time">{{ props.time }}</div>
     </div>
     <div class="right">
-      <span class="temp">{{ temp + '°' }}</span>
+      <span class="temp">{{ props.temp + '°' }}</span>
     </div>
   </div>
 </template>
@@ -18,12 +18,14 @@ interface Props {
   unit?: string
 }
 
+// keep the props object intact so that values remain reactive
 const props = withDefaults(defineProps<Props>(), {
   icon: undefined,
   unit: '°',
 })
 
-const { time, icon, temp, unit } = props
+// access props in template (e.g. props.time) instead of destructuring
+
 </script>
 
 <style scoped lang="scss">
