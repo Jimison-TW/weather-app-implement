@@ -1,22 +1,26 @@
 <template>
   <el-dropdown placement="bottom-end">
     <el-button class="button-container">
-      <img src="@/assets/images/icon-units.svg">
+      <img src="@/assets/images/icon-units.svg" />
       <span>Units</span>
-      <img src="@/assets/images/icon-dropdown.svg">
+      <img src="@/assets/images/icon-dropdown.svg" />
     </el-button>
     <template #dropdown>
       <el-dropdown-menu class="menu-container">
-        <el-button>Switch To Imperial</el-button>
+        <!-- 使用此按鈕處理單位切換：當前為 Metric 時顯示 Switch To Imperial，反之顯示 Switch To Metric -->
+        <el-button @click="onToggleUnit">{{
+          isMetric ? 'Switch To Imperial' : 'Switch To Metric'
+          }}</el-button>
+
         <div v-for="content in contentArray" :key="content.title">
           <span class="title">{{ content.title }}</span>
           <el-dropdown-item :class="{ selected: isMetric }">
             {{ content.metricUnit }}
-            <img class="selected-icon" v-show="isMetric" src="@/assets/images/icon-checkmark.svg">
+            <img class="selected-icon" v-show="isMetric" src="@/assets/images/icon-checkmark.svg" />
           </el-dropdown-item>
           <el-dropdown-item :class="{ selected: !isMetric }">
             {{ content.imperialUnit }}
-            <img class="selected-icon" v-show="!isMetric" src="@/assets/images/icon-checkmark.svg">
+            <img class="selected-icon" v-show="!isMetric" src="@/assets/images/icon-checkmark.svg" />
           </el-dropdown-item>
         </div>
       </el-dropdown-menu>
@@ -26,36 +30,46 @@
 
 <script setup lang="ts">
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElButton } from 'element-plus'
-import { UnitType } from '@/const/type';
-import { computed } from 'vue';
+import { UnitType } from '@/const/type'
+import { computed } from 'vue'
 
-const props = withDefaults(defineProps<{
-  visible?: boolean;
-  unitType?: UnitType;
-}>(), {
-  visible: false,
-  unitType: UnitType.METRIC // 預設為公制
-});
+const props = withDefaults(
+  defineProps<{
+    visible?: boolean
+    unitType?: UnitType
+  }>(),
+  {
+    visible: false,
+    unitType: UnitType.METRIC, // 預設為公制
+  },
+)
 
 const contentArray = [
   {
     title: 'Temperature',
     metricUnit: 'Celsius(C)',
-    imperialUnit: 'Fahrenheit(F)'
+    imperialUnit: 'Fahrenheit(F)',
   },
   {
     title: 'Wind Speed',
     metricUnit: 'km/h',
-    imperialUnit: 'mph'
+    imperialUnit: 'mph',
   },
   {
     title: 'Precipitation',
     metricUnit: 'Millimeters(mm)',
-    imperialUnit: 'Inches(in)'
-  }
+    imperialUnit: 'Inches(in)',
+  },
 ]
 
-const isMetric = computed(() => props.unitType === UnitType.METRIC);
+const emit = defineEmits<(e: 'update:unitType', value: UnitType) => void>()
+
+const isMetric = computed(() => props.unitType === UnitType.METRIC)
+
+const onToggleUnit = () => {
+  const next = isMetric.value ? UnitType.IMPERIAL : UnitType.METRIC
+  emit('update:unitType', next)
+}
 </script>
 
 <style scoped lang="scss">

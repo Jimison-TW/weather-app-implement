@@ -23,7 +23,6 @@ interface HourItem {
   icon?: string
   temp: number | string
   unit?: string
-  active?: boolean
 }
 
 const props = withDefaults(defineProps<{ items?: HourItem[]; days?: string[] }>(), {

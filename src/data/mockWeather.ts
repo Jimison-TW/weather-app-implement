@@ -38,7 +38,6 @@ function generateHourly(unitType: UnitType) {
     time: string
     icon: string | undefined
     temp: number
-    active?: boolean
   }>
   for (let i = 0; i < 24; i++) {
     const fTemp = randInt(50, 85) // fahrenheit range
@@ -70,18 +69,50 @@ export function getUnitSymbol(unitType: UnitType = UnitType.IMPERIAL) {
   return unitType === UnitType.IMPERIAL ? '°F' : '°C'
 }
 
+function generateStats(unitType: UnitType) {
+  const hourly = generateHourly(unitType)
+  const now = new Date()
+  const idx = now.getHours() % hourly.length
+  const currentHour = hourly[idx] ?? { temp: 0 }
+  const currentTemp = currentHour.temp
+
+  const humidity = randInt(30, 80)
+  const feelsLike = Math.round(currentTemp + randInt(-2, 3))
+  // wind: in mph for imperial, convert for metric
+  const windMph = randInt(0, 20)
+  const wind = unitType === UnitType.IMPERIAL ? windMph : Math.round(windMph * 1.60934)
+  const windUnit = unitType === UnitType.IMPERIAL ? 'mph' : 'km/h'
+  // precipitation: inches vs mm
+  const precipIn = Math.round(Math.random() * 5 * 10) / 10 / 10 // 0.0 - 0.5 rounded to 1 decimal
+  const precipitation = unitType === UnitType.IMPERIAL ? precipIn : Math.round(precipIn * 25.4)
+  const precipUnit = unitType === UnitType.IMPERIAL ? 'in' : 'mm'
+
+  return {
+    feelsLike,
+    humidity,
+    wind,
+    windUnit,
+    precipitation,
+    precipUnit,
+  }
+}
+
 export function getMockWeather(unitType: UnitType = UnitType.IMPERIAL) {
   const hourly = generateHourly(unitType)
   const daily = generateDaily(unitType)
   const now = new Date()
+  const idx = now.getHours() % hourly.length
+  const currentHour = hourly[idx] ?? { temp: 0, icon: sunny }
   const current = {
     city: 'Berlin',
     country: 'Germany',
     date: now,
-    icon: hourly[now.getHours()].icon,
-    temp: hourly[now.getHours()].temp,
+    icon: currentHour.icon,
+    temp: currentHour.temp,
     unit: getUnitSymbol(unitType),
   }
 
-  return { current, hourly, daily }
+  const stats = generateStats(unitType)
+
+  return { current, hourly, daily, stats }
 }

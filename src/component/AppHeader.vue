@@ -2,20 +2,22 @@
   <header class="header-wrapper">
     <div class="header-container">
       <img class="logo" src="@/assets/images/logo.svg" alt="Weather Now" />
-      <UnitButton />
+      <!-- 透過 prop 傳遞 unitType 並轉發 update 事件給父層 -->
+      <UnitButton :unitType="unitType" @update:unitType="(u) => emit('update:unitType', u)" />
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
 import UnitButton from './UnitDropdown.vue'
+import { UnitType } from '@/const/type'
 
-defineProps({
-  type: {
-    type: String,
-    default: 'primary',
-  },
+const props = withDefaults(defineProps<{ type?: string; unitType?: UnitType }>(), {
+  type: 'primary',
+  unitType: UnitType.METRIC,
 })
+
+const emit = defineEmits<(e: 'update:unitType', value: UnitType) => void>()
 </script>
 
 <style scoped lang="scss">

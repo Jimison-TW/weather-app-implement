@@ -1,6 +1,6 @@
 <template>
   <div class="weather-page">
-    <AppHeader />
+    <AppHeader v-model:unitType="unitType" />
 
     <main class="container">
       <h1 class="title">How’s the sky looking today?</h1>
@@ -14,10 +14,10 @@
           <CityBoard :city="city" :country="country" :date="date" :icon="icon" :temp="temp" />
 
           <div class="stats-row">
-            <StatCard label="Feels Like" :value="64" unit="°" />
-            <StatCard label="Humidity" :value="46" unit="%" />
-            <StatCard label="Wind" :value="9" unit="mph" />
-            <StatCard label="Precipitation" :value="0" unit="in" />
+            <StatCard label="Feels Like" :value="stats.feelsLike" :unit="unit" />
+            <StatCard label="Humidity" :value="stats.humidity" unit="%" />
+            <StatCard label="Wind" :value="stats.wind" :unit="stats.windUnit" />
+            <StatCard label="Precipitation" :value="stats.precipitation" :unit="stats.precipUnit" />
           </div>
 
           <DailyForecast>
@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import AppHeader from '@/component/AppHeader.vue'
 import SearchBar from '@/component/SearchBar.vue'
 import CityBoard from '@/component/CityBoard.vue'
@@ -54,21 +54,42 @@ import { UnitType } from '@/const/type'
 
 // 可參數化單位 (預設為 Imperial)
 const unitType = ref<UnitType>(UnitType.IMPERIAL)
-const { current, hourly: mockHourly, daily: mockDaily } = getMockWeather(unitType.value)
+const {
+  current,
+  hourly: mockHourly,
+  daily: mockDaily,
+  stats: mockStats,
+} = getMockWeather(unitType.value)
 
 const city = ref(current.city)
 const country = ref(current.country)
 const date = ref(current.date)
 const icon = ref(current.icon)
 const temp = ref(current.temp)
+const unit = ref(current.unit)
 
 const hourly = ref(mockHourly)
 const daily = ref(mockDaily)
+const stats = ref(mockStats)
 
 const onSearch = (query: string) => {
   // 目前只更新城市文字；可在未來加入 API 呼叫
   city.value = query
 }
+
+// 當 unitType 變動時，重新取得並更新 mock 資料
+watch(unitType, (next) => {
+  const { current, hourly: newHourly, daily: newDaily, stats: newStats } = getMockWeather(next)
+  city.value = current.city
+  country.value = current.country
+  date.value = current.date
+  icon.value = current.icon
+  temp.value = current.temp
+  unit.value = current.unit
+  hourly.value = newHourly
+  daily.value = newDaily
+  stats.value = newStats
+})
 </script>
 
 <style scoped lang="scss">
