@@ -50,45 +50,50 @@ import DailyForecast from '@/component/DailyForecast.vue'
 import DailyCard from '@/component/DailyCard.vue'
 import HourlyForecast from '@/component/HourlyForecast.vue'
 import { getMockWeather } from '@/data/mockWeather'
+import type { HourItem, DailyItem, Stats } from '@/data/mockWeather'
 import { UnitType } from '@/const/type'
 
-// 可參數化單位 (預設為 Imperial)
+// 可參數化單位與城市 (預設為 Berlin/Imperial)
 const unitType = ref<UnitType>(UnitType.IMPERIAL)
-const {
-  current,
-  hourly: mockHourly,
-  daily: mockDaily,
-  stats: mockStats,
-} = getMockWeather(unitType.value)
+const city = ref('Berlin')
+const country = ref('')
+const date = ref(new Date())
+const icon = ref<string | undefined>('')
+const temp = ref(0)
+const unit = ref('')
 
-const city = ref(current.city)
-const country = ref(current.country)
-const date = ref(current.date)
-const icon = ref(current.icon)
-const temp = ref(current.temp)
-const unit = ref(current.unit)
+// start with empty values; actual contents populated by updateWeather
+const hourly = ref<HourItem[]>([])
+const daily = ref<DailyItem[]>([])
+const stats = ref<Stats>({} as Stats)
 
-const hourly = ref(mockHourly)
-const daily = ref(mockDaily)
-const stats = ref(mockStats)
+// helper to refresh every piece of data
+function updateWeather(c: string, u: UnitType) {
+  const { current, hourly: newHourly, daily: newDaily, stats: newStats } = getMockWeather(c, u)
 
-const onSearch = (query: string) => {
-  // 目前只更新城市文字；可在未來加入 API 呼叫
-  city.value = query
-}
-
-// 當 unitType 變動時，重新取得並更新 mock 資料
-watch(unitType, (next) => {
-  const { current, hourly: newHourly, daily: newDaily, stats: newStats } = getMockWeather(next)
+  // keep city.value in sync so onSearch or other UI reflects canonical name
   city.value = current.city
   country.value = current.country
   date.value = current.date
   icon.value = current.icon
   temp.value = current.temp
   unit.value = current.unit
+
   hourly.value = newHourly
   daily.value = newDaily
   stats.value = newStats
+}
+
+// initial load
+updateWeather(city.value, unitType.value)
+
+const onSearch = (query: string) => {
+  city.value = query
+}
+
+// 當 unitType 或 city 變動時，重新取得並更新 mock 資料
+watch([unitType, city], ([u, c]) => {
+  updateWeather(c, u)
 })
 </script>
 

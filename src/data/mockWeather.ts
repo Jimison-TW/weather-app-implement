@@ -97,15 +97,71 @@ function generateStats(unitType: UnitType) {
   }
 }
 
-export function getMockWeather(unitType: UnitType = UnitType.IMPERIAL) {
+// cache results so switching back to a previously‑requested city/unit
+// returns the same mock dataset instead of regenerating random numbers
+
+export interface HourItem {
+  time: string
+  icon?: string
+  temp: number
+}
+
+export interface DailyItem {
+  day: string
+  icon?: string
+  high: number
+  low: number
+}
+
+export interface Stats {
+  feelsLike: number
+  humidity: number
+  wind: number
+  windUnit: string
+  precipitation: number
+  precipUnit: string
+}
+
+export interface WeatherData {
+  current: {
+    city: string
+    country: string
+    date: Date
+    icon: string | undefined
+    temp: number
+    unit: string
+  }
+  hourly: HourItem[]
+  daily: DailyItem[]
+  stats: Stats
+}
+
+const cityInfo: Record<string, { country: string }> = {
+  Berlin: { country: 'Germany' },
+  Taipei: { country: 'Taiwan' },
+  Tokyo: { country: 'Japan' },
+  // add more cities as needed
+}
+
+const cache: Record<string, WeatherData> = {}
+
+export function getMockWeather(
+  city: string = 'Berlin',
+  unitType: UnitType = UnitType.IMPERIAL,
+): WeatherData {
+  const key = `${city}-${unitType}`
+  if (cache[key]) {
+    return cache[key]
+  }
+
   const hourly = generateHourly(unitType)
   const daily = generateDaily(unitType)
   const now = new Date()
   const idx = now.getHours() % hourly.length
   const currentHour = hourly[idx] ?? { temp: 0, icon: sunny }
   const current = {
-    city: 'Berlin',
-    country: 'Germany',
+    city,
+    country: cityInfo[city]?.country || '',
     date: now,
     icon: currentHour.icon,
     temp: currentHour.temp,
@@ -113,6 +169,7 @@ export function getMockWeather(unitType: UnitType = UnitType.IMPERIAL) {
   }
 
   const stats = generateStats(unitType)
-
-  return { current, hourly, daily, stats }
+  const result: WeatherData = { current, hourly, daily, stats }
+  cache[key] = result
+  return result
 }
