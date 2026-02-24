@@ -58,3 +58,13 @@ export const WithCustomPlaceholder: Story = {
     placeholder: 'Enter city name...',
   },
 }
+
+export const mobileView: Story = {
+  args: {
+    placeholder: 'Search for a place...',
+  },
+  parameters: {
+    viewport: { defaultViewport: 'iphonex' },
+    layout: 'fullscreen',
+  },
+}
