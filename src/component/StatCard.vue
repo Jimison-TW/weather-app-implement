@@ -36,6 +36,25 @@ const props = withDefaults(defineProps<Props>(), {
   border: 1px solid rgba(255, 255, 255, 0.02);
 }
 
+@media (max-width: 480px) {
+  .stat-card {
+    /* remove fixed width and allow wrapping parent to control
+       card size; use flex-basis so two cards per row in a wrap container */
+    width: 100%;
+    max-width: none;
+    flex: 1 1 calc(50% - 8px);
+    min-width: auto;
+  }
+
+  .label {
+    font-size: 12px;
+  }
+
+  .value {
+    font-size: 24px;
+  }
+}
+
 .label {
   color: $neutral-0;
   font-size: 13px;

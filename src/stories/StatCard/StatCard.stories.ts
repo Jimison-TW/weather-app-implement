@@ -46,3 +46,22 @@ export const StatBar: Story = {
     `,
   }),
 }
+
+export const mobileView: Story = {
+  args: {},
+  render: () => ({
+    components: { StatCard },
+    template: `
+      <div style="display:flex; flex-wrap:wrap; gap:12px; padding:16px; background: rgba(0,0,0,0);">
+        <StatCard label="Feels Like" value="64" unit="°" />
+        <StatCard label="Humidity" value="46" unit="%" />
+        <StatCard label="Wind" value="9" unit="mph" />
+        <StatCard label="Precipitation" value="0" unit="in" />
+      </div>
+    `,
+  }),
+  parameters: {
+    viewport: { defaultViewport: 'iphonex' },
+    layout: 'fullscreen',
+  },
+}
