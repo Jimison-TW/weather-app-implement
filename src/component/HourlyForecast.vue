@@ -10,14 +10,7 @@
     </header>
 
     <div class="list" role="list">
-      <HourlyCard
-          v-for="h in items"
-          :key="h.time"
-          :time="h.time"
-          :icon="h.icon"
-          :temp="h.temp"
-          :unit="h.unit"
-        />
+      <HourlyCard v-for="h in items" :key="h.time" :time="h.time" :icon="h.icon" :temp="h.temp" :unit="h.unit" />
     </div>
   </aside>
 </template>
@@ -32,6 +25,7 @@ interface HourItem {
   unit?: string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = withDefaults(defineProps<{ items?: HourItem[]; days?: string[] }>(), {
   items: () => [],
   days: () => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
@@ -96,6 +90,16 @@ const props = withDefaults(defineProps<{ items?: HourItem[]; days?: string[] }>(
 @media (max-width: 480px) {
   .hourly-forecast {
     width: 100%;
+    max-width: none;
+    /* slightly larger padding on phones for touch friendliness */
+    padding: clamp(12px, 4vw, 20px);
+  }
+
+  .list {
+    /* increase gap for touch spacing and allow longer scroll area */
+    gap: 12px;
+    /* allow list to use most of the viewport while leaving room for header */
+    max-height: calc(100vh - 200px);
   }
 }
 </style>

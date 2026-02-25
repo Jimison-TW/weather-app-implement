@@ -48,6 +48,27 @@ const handleSearch = () => {
   gap: 16px;
 }
 
+/* mobile adjustments: stack input and button full-width */
+@media (max-width: 480px) {
+  .search-bar-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    max-width: 100%;
+  }
+
+  .search-bar {
+    padding: 12px 16px;
+  }
+
+  .search-button {
+    width: 100%;
+    padding: 14px 0;
+    /* ensure tap target is large enough */
+    font-size: 16px;
+  }
+}
+
 .search-bar {
   display: flex;
   align-items: center;

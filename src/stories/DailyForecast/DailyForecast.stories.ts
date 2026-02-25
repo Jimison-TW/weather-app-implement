@@ -38,3 +38,14 @@ export const Scrollable: Story = {
     items,
   },
 }
+
+export const mobileView: Story = {
+  args: {
+    items,
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+}

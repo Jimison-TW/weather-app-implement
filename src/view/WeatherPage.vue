@@ -151,6 +151,14 @@ watch([unitType, city], ([u, c]) => {
   justify-content: space-between;
 }
 
+@media (max-width: 480px) {
+  .stats-row {
+    /* allow wrapping and two-per-row layout */
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
 .forecast-title {
   font-family: $font-display;
   font-size: 16px;
@@ -164,6 +172,14 @@ watch([unitType, city], ([u, c]) => {
   justify-content: space-between;
 }
 
+@media (max-width: 480px) {
+  .daily-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+}
+
 @media (max-width: 880px) {
   .layout {
     flex-direction: column;
@@ -171,6 +187,7 @@ watch([unitType, city], ([u, c]) => {
 
   .right-column {
     width: 100%;
+    margin-bottom: 20px;
   }
 
   .title {

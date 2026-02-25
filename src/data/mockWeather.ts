@@ -84,7 +84,9 @@ function generateStats(unitType: UnitType) {
   const windUnit = unitType === UnitType.IMPERIAL ? 'mph' : 'km/h'
   // precipitation: inches vs mm
   const precipIn = Math.round(Math.random() * 5 * 10) / 10 / 10 // 0.0 - 0.5 rounded to 1 decimal
-  const precipitation = unitType === UnitType.IMPERIAL ? precipIn : Math.round(precipIn * 25.4)
+  // ensure precipitation value is at most two decimal places to avoid long fractions
+  const rawPrecip = unitType === UnitType.IMPERIAL ? precipIn : precipIn * 25.4
+  const precipitation = Math.round(rawPrecip * 100) / 100
   const precipUnit = unitType === UnitType.IMPERIAL ? 'in' : 'mm'
 
   return {

@@ -23,6 +23,7 @@ interface DayItem {
   low: number | string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = withDefaults(defineProps<{ items?: DayItem[] }>(), {
   items: () => [],
 })
@@ -43,12 +44,5 @@ const props = withDefaults(defineProps<{ items?: DayItem[] }>(), {
 .list {
   display: flex;
   gap: 12px;
-}
-
-@media (max-width: 480px) {
-  .list {
-    overflow-x: auto;
-    padding-bottom: 8px;
-  }
 }
 </style>

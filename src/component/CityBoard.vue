@@ -1,7 +1,10 @@
 <template>
   <section class="weather-hero" role="region" :aria-label="`${city}, ${country} weather`">
-    <!-- 物理撐開父層的背景圖（使用 <img>） -->
-    <img class="bg-image" :src="bg" alt="weather background" />
+    <!-- use picture element so we can swap to a smaller svg on narrow viewports -->
+    <picture>
+      <source media="(max-width: 480px)" :srcset="bgSmall" />
+      <img class="bg-image" :src="bg" alt="weather background" />
+    </picture>
 
     <div class="content">
       <div class="location">
@@ -22,6 +25,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import bg from '@/assets/images/bg-today-large.svg'
+import bgSmall from '@/assets/images/bg-today-small.svg'
 
 interface Props {
   city: string
@@ -71,6 +75,7 @@ const formattedDate = computed(() => {
   border-radius: 20px;
 }
 
+/* content holds the text and temperature over the background */
 .content {
   position: absolute;
   inset: 0;
@@ -138,34 +143,51 @@ const formattedDate = computed(() => {
 }
 
 @media (max-width: 480px) {
+  .weather-hero {
+    border-radius: 12px;
+  }
+
+  /* stack location and weather vertically */
+  .content {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  /* hide spacer when stacking */
+  .spacer {
+    display: none;
+  }
+
+  .city {
+    font-size: 28px;
+  }
+
+  .date {
+    font-size: 14px;
+  }
+
   .temp {
-    font-size: 44px;
+    font-size: 80px;
+    margin-left: 10px;
+  }
+
+  .weather-icon {
+    width: 100px;
+    height: 100px;
   }
 
   .unit {
     top: -6px;
     right: -6px;
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .weather-hero {
-    padding: 16px;
-    border-radius: 12px;
+    font-size: 18px;
   }
 
-  .city {
-    font-size: 20px;
-  }
-
-  .temp {
-    font-size: 44px;
-  }
-
-  .weather-icon {
-    width: 48px;
-    height: 48px;
+  /* position tweak for small background so important shapes are visible */
+  .bg-image {
+    object-position: top center;
   }
 }
 </style>

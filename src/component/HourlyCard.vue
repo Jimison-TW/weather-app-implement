@@ -86,4 +86,28 @@ const props = withDefaults(defineProps<Props>(), {
     transform: translateY(-1px);
   }
 }
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .hourly-card {
+    padding: 12px 16px;
+    gap: 14px;
+    min-height: 64px;
+  }
+
+  .hourly-card .time {
+    font-size: clamp(1rem, 3.5vw, 1.2rem);
+    min-width: 56px;
+  }
+
+  .hourly-card .icon {
+    width: clamp(32px, 6vw, 44px);
+    height: auto;
+  }
+
+  .hourly-card .temp {
+    font-size: clamp(1.1rem, 4vw, 1.6rem);
+    font-weight: $fw-semibold;
+  }
+}
 </style>
