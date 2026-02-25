@@ -37,3 +37,19 @@ export const NoIcon: Story = {
     unit: '°F',
   },
 }
+
+export const mobileView: Story = {
+  args: {
+    city: 'Berlin',
+    country: 'Germany',
+    date: '2025-08-05',
+    icon: sunny,
+    temp: 68,
+    unit: '°',
+  },
+  parameters: {
+    viewport: { defaultViewport: 'iphonex' },
+    layout: 'fullscreen',
+    backgrounds: { default: 'transparent' },
+  },
+}

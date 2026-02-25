@@ -151,6 +151,14 @@ watch([unitType, city], ([u, c]) => {
   justify-content: space-between;
 }
 
+@media (max-width: 480px) {
+  .stats-row {
+    /* allow wrapping and two-per-row layout */
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
 .forecast-title {
   font-family: $font-display;
   font-size: 16px;
