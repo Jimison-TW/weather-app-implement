@@ -48,7 +48,11 @@ export const StatBar: Story = {
 }
 
 export const mobileView: Story = {
-  args: {},
+  args: {
+    label: 'Humidity',
+    value: 80,
+    unit: '%',
+  },
   render: () => ({
     components: { StatCard },
     template: `

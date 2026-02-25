@@ -43,7 +43,6 @@ export const mobileView: Story = {
     date: '2025-08-05',
     icon: sunny,
     temp: 68,
-    unit: '°',
   },
   parameters: {
     viewport: { defaultViewport: 'iphonex' },
