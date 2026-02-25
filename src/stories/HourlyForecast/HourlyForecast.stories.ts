@@ -40,3 +40,12 @@ export const LongList: Story = {
     ],
   },
 }
+
+export const MobileView: Story = {
+  args: { items },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+}

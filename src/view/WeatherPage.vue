@@ -187,6 +187,7 @@ watch([unitType, city], ([u, c]) => {
 
   .right-column {
     width: 100%;
+    margin-bottom: 20px;
   }
 
   .title {
