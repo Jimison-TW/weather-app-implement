@@ -17,6 +17,7 @@ interface Props {
   low: number | string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = withDefaults(defineProps<Props>(), {
   icon: undefined,
 })
@@ -35,6 +36,13 @@ const props = withDefaults(defineProps<Props>(), {
   gap: 8px;
   box-shadow: 0 6px 16px rgba(7, 7, 17, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+@media (max-width: 480px) {
+  .daily-card {
+    width: 100%;
+    padding: 16px 12px;
+  }
 }
 
 .day {

@@ -172,6 +172,14 @@ watch([unitType, city], ([u, c]) => {
   justify-content: space-between;
 }
 
+@media (max-width: 480px) {
+  .daily-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+}
+
 @media (max-width: 880px) {
   .layout {
     flex-direction: column;
