@@ -24,7 +24,6 @@ export const Default: Story = {
     date: '2025-08-05',
     icon: sunny,
     temp: 68,
-    unit: '°',
   },
 }
 
@@ -34,6 +33,5 @@ export const NoIcon: Story = {
     country: 'Japan',
     date: '2025-09-08',
     temp: 73,
-    unit: '°F',
   },
 }
