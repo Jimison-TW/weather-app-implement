@@ -66,6 +66,6 @@ export default defineConfig(({}) => {
         },
       ],
     },
-    base: '/weather-app-implement/',
+    base: './',
   }
 })
