@@ -152,10 +152,39 @@ export function getMockWeather(
   unitType: UnitType = UnitType.IMPERIAL,
 ): WeatherData {
   const key = `${city}-${unitType}`
+
+  // in-memory cache hit
   if (cache[key]) {
     return cache[key]
   }
 
+  const storageKey = `mockWeather:${key}`
+
+  // try localStorage (persisted) hit — only use if same calendar date
+  try {
+    const raw = typeof localStorage !== 'undefined' ? localStorage.getItem(storageKey) : null
+    if (raw) {
+      const parsed = JSON.parse(raw) as any
+      const storedDate = parsed?.current?.date ? new Date(parsed.current.date) : null
+      const today = new Date()
+      const sameDay =
+        storedDate &&
+        storedDate.getFullYear() === today.getFullYear() &&
+        storedDate.getMonth() === today.getMonth() &&
+        storedDate.getDate() === today.getDate()
+
+      if (sameDay) {
+        // convert stored ISO date string back to Date object
+        parsed.current.date = storedDate
+        cache[key] = parsed as WeatherData
+        return cache[key]
+      }
+    }
+  } catch (e) {
+    // ignore storage errors and fall back to generation
+  }
+
+  // generate new mock data and persist
   const hourly = generateHourly(unitType)
   const daily = generateDaily(unitType)
   const now = new Date()
@@ -173,5 +202,17 @@ export function getMockWeather(
   const stats = generateStats(unitType)
   const result: WeatherData = { current, hourly, daily, stats }
   cache[key] = result
+
+  try {
+    if (typeof localStorage !== 'undefined') {
+      const toStore = JSON.parse(JSON.stringify(result))
+      // ensure date is stored as ISO string
+      if (toStore.current) toStore.current.date = result.current.date.toISOString()
+      localStorage.setItem(storageKey, JSON.stringify(toStore))
+    }
+  } catch (e) {
+    // ignore storage write errors
+  }
+
   return result
 }
