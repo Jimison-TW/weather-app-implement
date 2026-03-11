@@ -107,7 +107,7 @@ function weatherDataParse(params: WeatherData3) {
   const countryName = '' // country is not provided by current weather API, can be left blank or fetched separately if needed
   const dateValue = new Date(current.dt * 1000) // convert Unix timestamp to Date
   const dayWeekValue = dateValue.toLocaleDateString('en-US', { weekday: 'long' })
-  const iconCode = iconMap[current.weather[0].icon] || '' // map API icon code to local asset, fallback to empty string if not found
+  const iconCode = iconMap[current.weather?.[0]?.icon || ''] || '' // map API icon code to local asset, fallback to empty string if not found
   const tempValue = Math.round(current.temp)
   const unitValue = unitType.value === UnitType.IMPERIAL ? '°F' : '°C'
   const statsValue: Stats = {
@@ -115,7 +115,7 @@ function weatherDataParse(params: WeatherData3) {
     humidity: current.humidity,
     wind: Math.round(current.wind_speed),
     windUnit: unitType.value === UnitType.IMPERIAL ? 'mph' : 'm/s',
-    precipitation: Math.round(hourly[0]!.pop * 100) || 0,// convert to percentage
+    precipitation: Math.round((hourly[0]?.pop ?? 0) * 100) || 0,// convert to percentage
     precipUnit: '%',
   }
   // 只取得24小時的資料，並針對time加上AM PM標記
@@ -127,13 +127,13 @@ function weatherDataParse(params: WeatherData3) {
     hours = hours ? hours : 12 // the hour '0' should be '12'
     return {
       time: `${hours} ${ampm}`,
-      icon: iconMap[h.weather[0].icon],
+      icon: iconMap[h.weather?.[0]?.icon || ''] || '',
       temp: Math.round(h.temp),
     }
   })
   const dailyValue = params.daily.slice(0, 7).map((d) => ({
     day: new Date(d.dt * 1000).toLocaleDateString('en-US', { weekday: 'short' }), // get weekday name
-    icon: iconMap[d.weather[0].icon],
+    icon: iconMap[d.weather?.[0]?.icon || ''] || '',
     high: Math.round(d.temp.max),
     low: Math.round(d.temp.min),
   }))
