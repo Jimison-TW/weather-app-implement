@@ -51,7 +51,7 @@ export const fetchLocationByCity = async (
 ): Promise<{ lat: number; lon: number; country: string }> => {
   // 透過 Geocoding API 轉換地名為座標
   console.log(`正在查詢 ${city} 的座標...`)
-  const geoUrl = `http://api.openweathermap.org/geo/1.0/direct`
+  const geoUrl = `https://api.openweathermap.org/geo/1.0/direct`
   const geoRes = await axios.get<GeoResponse[]>(geoUrl, {
     params: {
       q: city,
