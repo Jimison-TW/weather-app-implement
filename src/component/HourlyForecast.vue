@@ -17,13 +17,7 @@
 
 <script setup lang="ts">
 import HourlyCard from './HourlyCard.vue'
-
-interface HourItem {
-  time: string
-  icon?: string
-  temp: number | string
-  unit?: string
-}
+import type { HourItem } from '@/const/interface'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = withDefaults(defineProps<{ items?: HourItem[]; days?: string[] }>(), {

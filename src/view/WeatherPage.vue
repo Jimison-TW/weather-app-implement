@@ -33,7 +33,7 @@
         </div>
 
         <div class="right-column">
-          <HourlyForecast :items="hourly" />
+          <HourlyForecast :items="hourly" :days="[dayWeek]" />
         </div>
       </section>
     </main>
@@ -50,14 +50,48 @@ import DailyForecast from '@/component/DailyForecast.vue'
 import DailyCard from '@/component/DailyCard.vue'
 import HourlyForecast from '@/component/HourlyForecast.vue'
 import { getMockWeather } from '@/data/mockWeather'
-import type { HourItem, DailyItem, Stats } from '@/data/mockWeather'
+import type { HourItem, DailyItem, Stats } from '@/const/interface'
 import { UnitType } from '@/const/type'
+import type { WeatherData3 } from '@/const/interface'
+import { fetchLocationByCity, fetchWeatherByCoords } from '@/api/weatherService'
+
+import sunny from '@/assets/images/icon-sunny.webp'
+import rain from '@/assets/images/icon-rain.webp'
+import cloud from '@/assets/images/icon-overcast.webp'
+import fewCloud from '@/assets/images/icon-partly-cloudy.webp'
+import storm from '@/assets/images/icon-storm.webp'
+import snow from '@/assets/images/icon-snow.webp'
+import fog from '@/assets/images/icon-fog.webp'
+import overcast from '@/assets/images/icon-overcast.webp'
+import drizzle from '@/assets/images/icon-drizzle.webp'
+
+const iconMap: Record<string, string> = {
+  '01d': sunny,
+  '01n': sunny,
+  '02d': fewCloud,
+  '02n': fewCloud,
+  '03d': cloud,
+  '03n': cloud,
+  '04d': overcast,
+  '04n': overcast,
+  '09d': drizzle,
+  '09n': drizzle,
+  '10d': rain,
+  '10n': rain,
+  '11d': storm,
+  '11n': storm,
+  '13d': snow,
+  '13n': snow,
+  '50d': snow,
+  '50n': fog,
+}
 
 // 可參數化單位與城市 (預設為 Berlin/Imperial)
 const unitType = ref<UnitType>(UnitType.IMPERIAL)
-const city = ref('Berlin')
+const city = ref('Taipei')
 const country = ref('')
 const date = ref(new Date())
+const dayWeek = ref('')
 const icon = ref<string | undefined>('')
 const temp = ref(0)
 const unit = ref('')
@@ -67,8 +101,81 @@ const hourly = ref<HourItem[]>([])
 const daily = ref<DailyItem[]>([])
 const stats = ref<Stats>({} as Stats)
 
+function weatherDataParse(params: WeatherData3) {
+  const { current, hourly } = params
+  const cityName = city.value // use the searched city name as the canonical name
+  const countryName = '' // country is not provided by current weather API, can be left blank or fetched separately if needed
+  const dateValue = new Date(current.dt * 1000) // convert Unix timestamp to Date
+  const dayWeekValue = dateValue.toLocaleDateString('en-US', { weekday: 'long' })
+  const iconCode = iconMap[current.weather[0].icon] || '' // map API icon code to local asset, fallback to empty string if not found
+  const tempValue = Math.round(current.temp)
+  const unitValue = unitType.value === UnitType.IMPERIAL ? '°F' : '°C'
+  const statsValue: Stats = {
+    feelsLike: Math.round(current.feels_like),
+    humidity: current.humidity,
+    wind: Math.round(current.wind_speed),
+    windUnit: unitType.value === UnitType.IMPERIAL ? 'mph' : 'm/s',
+    precipitation: Math.round(hourly[0]!.pop * 100) || 0,// convert to percentage
+    precipUnit: '%',
+  }
+  // 只取得24小時的資料，並針對time加上AM PM標記
+  const hourlyValue = params.hourly.slice(0, 24).map((h) => {
+    const date = new Date(h.dt * 1000)
+    let hours = date.getHours()
+    const ampm = hours >= 12 ? 'PM' : 'AM'
+    hours = hours % 12
+    hours = hours ? hours : 12 // the hour '0' should be '12'
+    return {
+      time: `${hours} ${ampm}`,
+      icon: iconMap[h.weather[0].icon],
+      temp: Math.round(h.temp),
+    }
+  })
+  const dailyValue = params.daily.slice(0, 7).map((d) => ({
+    day: new Date(d.dt * 1000).toLocaleDateString('en-US', { weekday: 'short' }), // get weekday name
+    icon: iconMap[d.weather[0].icon],
+    high: Math.round(d.temp.max),
+    low: Math.round(d.temp.min),
+  }))
+
+  return {
+    city: cityName,
+    country: countryName,
+    date: dateValue,
+    dayWeek: dayWeekValue,
+    icon: iconCode,
+    temp: tempValue,
+    unit: unitValue,
+    stats: statsValue,
+    hourly: hourlyValue,
+    daily: dailyValue,
+  }
+}
+
 // helper to refresh every piece of data
-function updateWeather(c: string, u: UnitType) {
+async function updateWeather(c: string, u: UnitType) {
+  const location = await fetchLocationByCity(c)
+  console.log('Fetched location data:', location)
+  const data = await fetchWeatherByCoords(location.lat, location.lon, u)
+  console.log('Fetched weather data:', data)
+
+  if (data !== undefined) {
+    const parsed = weatherDataParse(data)
+    city.value = c
+    unit.value = parsed.unit
+    temp.value = parsed.temp
+    country.value = location.country || ''
+    hourly.value = parsed.hourly
+    daily.value = parsed.daily
+    stats.value = parsed.stats
+    date.value = parsed.date
+    dayWeek.value = parsed.dayWeek
+    icon.value = parsed.icon
+    return
+  }
+
+  alert(`Failed to fetch weather data for ${c}. Please Check the city name and try again.`)
+
   const { current, hourly: newHourly, daily: newDaily, stats: newStats } = getMockWeather(c, u)
 
   // keep city.value in sync so onSearch or other UI reflects canonical name
