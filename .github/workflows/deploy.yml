@@ -4,7 +4,7 @@ name: Deploy static content to Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ['main']
+    branches: ['main', 'develop']
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -41,7 +41,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_OPENWEATHER_API_KEY: ${{ secrets.VITE_OPENWEATHER_API_KEY }}
+          VITE_OPENWEATHER_API_KEY: ${{ github.ref == 'refs/heads/main' && secrets.VITE_API_KEY_PROD || secrets.VITE_API_KEY_DEV }}
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
