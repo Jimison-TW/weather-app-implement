@@ -9,7 +9,7 @@ This template should help get you started developing with Vue 3 in Vite.
 ## Recommended Browser Setup
 
 - Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
+  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
   - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
 - Firefox:
   - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
@@ -34,6 +34,29 @@ npm install
 ```sh
 npm run dev
 ```
+
+### Serverless API key proxy (optional)
+
+To avoid exposing your OpenWeather API key in the client bundle you can
+deploy small serverless functions that perform the requests on behalf of the
+browser. Three example handlers are provided under
+`src/api/serverless` (`geoProxy`, `weatherProxy` and `weatherByCity`), plus a
+simple `getApiKey` function.
+
+During development the app continues to call the real OpenWeather endpoints
+(using `VITE_OPENWEATHER_API_KEY` from your `.env.*` files). When you want
+to switch to the serverless versions set the following environment variable
+at build time:
+
+```
+VITE_USE_SERVERLESS=true
+```
+
+The frontend will then hit `/api/…` routes instead of the public API and the
+key is only ever used on the server.
+
+Make sure your deployment platform copies the `OPENWEATHER_API_KEY` (without
+`VITE_` prefix) into the server environment so the handlers can read it.
 
 ### Type-Check, Compile and Minify for Production
 
