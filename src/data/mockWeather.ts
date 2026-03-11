@@ -8,6 +8,7 @@ import overcast from '@/assets/images/icon-overcast.webp'
 import drizzle from '@/assets/images/icon-drizzle.webp'
 
 import { UnitType } from '@/const/type'
+import type { HourItem, DailyItem, Stats } from '@/const/interface'
 
 // Helper utilities to generate randomized mock values
 function randInt(min: number, max: number) {
@@ -99,31 +100,6 @@ function generateStats(unitType: UnitType) {
   }
 }
 
-// cache results so switching back to a previously‑requested city/unit
-// returns the same mock dataset instead of regenerating random numbers
-
-export interface HourItem {
-  time: string
-  icon?: string
-  temp: number
-}
-
-export interface DailyItem {
-  day: string
-  icon?: string
-  high: number
-  low: number
-}
-
-export interface Stats {
-  feelsLike: number
-  humidity: number
-  wind: number
-  windUnit: string
-  precipitation: number
-  precipUnit: string
-}
-
 export interface WeatherData {
   current: {
     city: string
@@ -164,7 +140,7 @@ export function getMockWeather(
   try {
     const raw = typeof localStorage !== 'undefined' ? localStorage.getItem(storageKey) : null
     if (raw) {
-      const parsed = JSON.parse(raw) as any
+      const parsed = JSON.parse(raw) as WeatherData
       const storedDate = parsed?.current?.date ? new Date(parsed.current.date) : null
       const today = new Date()
       const sameDay =
