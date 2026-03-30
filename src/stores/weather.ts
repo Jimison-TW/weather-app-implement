@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { fetchWeatherByCity } from '@/api/weatherService'
 import type { WeatherData } from '@/const/interface'
 import type { UnitType } from '@/const/type'
+import axios from 'axios'
 
 export const useWeatherStore = defineStore('weather', () => {
   // State
@@ -18,8 +19,10 @@ export const useWeatherStore = defineStore('weather', () => {
     try {
       const data = await fetchWeatherByCity(city, unitType)
       weatherData.value = data
-    } catch (e: any) {
-      error.value = e.message
+    } catch (e: unknown) {
+      if (axios.isAxiosError(e)) {
+        error.value = e.message
+      }
     } finally {
       isLoading.value = false
     }
