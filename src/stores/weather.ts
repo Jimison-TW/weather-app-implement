@@ -1,15 +1,15 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { fetchWeatherByCity } from '@/api/weatherService'
-import type { WeatherData } from '@/const/interface'
+import type { WeatherData2 } from '@/const/interface'
 import type { UnitType } from '@/const/type'
-import axios from 'axios'
+import { WeatherApiError } from '@/const/errors'
 
 export const useWeatherStore = defineStore('weather', () => {
   // State
-  const weatherData = ref<WeatherData | null>(null)
+  const weatherData = ref<WeatherData2 | null>(null)
   const isLoading = ref(false)
-  const error = ref<string | null>(null)
+  const error = ref<WeatherApiError | null>(null)
 
   // Actions
   async function fetchWeather(city: string, unitType: UnitType) {
@@ -19,10 +19,13 @@ export const useWeatherStore = defineStore('weather', () => {
     try {
       const data = await fetchWeatherByCity(city, unitType)
       weatherData.value = data
+      return true
     } catch (e: unknown) {
-      if (axios.isAxiosError(e)) {
-        error.value = e.message
-      }
+      error.value =
+        e instanceof WeatherApiError
+          ? e
+          : new WeatherApiError(null, e instanceof Error ? e.message : '發生未知錯誤')
+      return false
     } finally {
       isLoading.value = false
     }
