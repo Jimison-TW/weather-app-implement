@@ -1,8 +1,13 @@
 <template>
   <div class="weather-page">
     <AppHeader v-model:unitType="unitType" />
-
-    <main class="container">
+    <WeatherError
+        v-if="weatherError"
+        :title="weatherError.status === 401 ? 'API 認證失敗' : weatherError.status === 404 ? '找不到城市' : '無法取得天氣'"
+        :message="weatherError.message"
+        @retry="onRetry"
+      />
+    <main v-else class="container">
       <h1 class="title">How’s the sky looking today?</h1>
 
       <div class="search-row">
@@ -10,13 +15,6 @@
       </div>
 
       <div v-if="isLoading" class="status-overlay">Loading...</div>
-
-      <WeatherError
-        v-else-if="weatherError"
-        :title="weatherError.status === 401 ? 'API 認證失敗' : weatherError.status === 404 ? '找不到城市' : '無法取得天氣'"
-        :message="weatherError.message"
-        @retry="onRetry"
-      />
 
       <section v-else class="layout">
         <div class="left-column">

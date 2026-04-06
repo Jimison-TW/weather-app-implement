@@ -34,12 +34,11 @@ defineEmits<{
   color: $neutral-0;
   text-align: center;
   width: 100%;
-  max-width: 520px;
 }
 
 .error-icon {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
 }
 
 .error-title {
