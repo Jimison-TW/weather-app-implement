@@ -14,11 +14,10 @@
         <SearchBar @search="onSearch" />
       </div>
 
-      <div v-if="isLoading" class="status-overlay">Loading...</div>
-
-      <section v-else class="layout">
+      <section class="layout">
         <div class="left-column">
-          <CityBoard :city="city" :country="country" :date="date" :icon="icon" :temp="temp" />
+          <CityBoardSkeleton v-if="isLoading" />
+          <CityBoard v-else :city="city" :country="country" :date="date" :icon="icon" :temp="temp" />
 
           <div class="stats-row">
             <StatCard label="Feels Like" :value="stats.feelsLike" :unit="unit" />
@@ -53,6 +52,7 @@ import AppHeader from '@/component/AppHeader.vue'
 import SearchBar from '@/component/SearchBar.vue'
 import WeatherError from '@/component/WeatherError.vue'
 import CityBoard from '@/component/CityBoard.vue'
+import CityBoardSkeleton from '@/component/skeleton/CityBoardSkeleton.vue'
 import StatCard from '@/component/StatCard.vue'
 import DailyForecast from '@/component/DailyForecast.vue'
 import DailyCard from '@/component/DailyCard.vue'
@@ -190,7 +190,7 @@ async function updateWeather(c: string, u: UnitType) {
       ? { status: (err as { status?: number }).status ?? null, message: err.message }
       : { status: null, message: String(err) }
   } finally {
-    isLoading.value = false
+    // isLoading.value = false
   }
 }
 
