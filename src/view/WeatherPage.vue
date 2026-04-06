@@ -20,10 +20,18 @@
           <CityBoard v-else :city="city" :country="country" :date="date" :icon="icon" :temp="temp" />
 
           <div class="stats-row">
-            <StatCard label="Feels Like" :value="stats.feelsLike" :unit="unit" />
-            <StatCard label="Humidity" :value="stats.humidity" unit="%" />
-            <StatCard label="Wind" :value="stats.wind" :unit="stats.windUnit" />
-            <StatCard label="Precipitation" :value="stats.precipitation" :unit="stats.precipUnit" />
+            <template v-if="isLoading">
+              <StatCardSkeleton label="Feels Like" />
+              <StatCardSkeleton label="Humidity" />
+              <StatCardSkeleton label="Wind" />
+              <StatCardSkeleton label="Precipitation" />
+            </template>
+            <template v-else>
+              <StatCard label="Feels Like" :value="stats.feelsLike" :unit="unit" />
+              <StatCard label="Humidity" :value="stats.humidity" unit="%" />
+              <StatCard label="Wind" :value="stats.wind" :unit="stats.windUnit" />
+              <StatCard label="Precipitation" :value="stats.precipitation" :unit="stats.precipUnit" />
+            </template>
           </div>
 
           <DailyForecast>
@@ -54,6 +62,7 @@ import WeatherError from '@/component/WeatherError.vue'
 import CityBoard from '@/component/CityBoard.vue'
 import CityBoardSkeleton from '@/component/skeleton/CityBoardSkeleton.vue'
 import StatCard from '@/component/StatCard.vue'
+import StatCardSkeleton from '@/component/skeleton/StatCardSkeleton.vue'
 import DailyForecast from '@/component/DailyForecast.vue'
 import DailyCard from '@/component/DailyCard.vue'
 import HourlyForecast from '@/component/HourlyForecast.vue'
