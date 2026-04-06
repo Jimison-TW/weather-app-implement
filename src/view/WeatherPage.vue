@@ -1,15 +1,22 @@
 <template>
   <div class="weather-page">
     <AppHeader v-model:unitType="unitType" />
-
-    <main class="container">
+    <WeatherError
+        v-if="weatherError"
+        :title="weatherError.status === 401 ? 'API 認證失敗' : weatherError.status === 404 ? '找不到城市' : '無法取得天氣'"
+        :message="weatherError.message"
+        @retry="onRetry"
+      />
+    <main v-else class="container">
       <h1 class="title">How’s the sky looking today?</h1>
 
       <div class="search-row">
         <SearchBar @search="onSearch" />
       </div>
 
-      <section class="layout">
+      <div v-if="isLoading" class="status-overlay">Loading...</div>
+
+      <section v-else class="layout">
         <div class="left-column">
           <CityBoard :city="city" :country="country" :date="date" :icon="icon" :temp="temp" />
 
@@ -44,12 +51,12 @@
 import { ref, watch } from 'vue'
 import AppHeader from '@/component/AppHeader.vue'
 import SearchBar from '@/component/SearchBar.vue'
+import WeatherError from '@/component/WeatherError.vue'
 import CityBoard from '@/component/CityBoard.vue'
 import StatCard from '@/component/StatCard.vue'
 import DailyForecast from '@/component/DailyForecast.vue'
 import DailyCard from '@/component/DailyCard.vue'
 import HourlyForecast from '@/component/HourlyForecast.vue'
-import { getMockWeather } from '@/data/mockWeather'
 import type { HourItem, DailyItem, Stats } from '@/const/interface'
 import { UnitType } from '@/const/type'
 import type { WeatherData3 } from '@/const/interface'
@@ -100,6 +107,9 @@ const unit = ref('')
 const hourly = ref<HourItem[]>([])
 const daily = ref<DailyItem[]>([])
 const stats = ref<Stats>({} as Stats)
+
+const isLoading = ref(false)
+const weatherError = ref<{ status: number | null; message: string } | null>(null)
 
 function weatherDataParse(params: WeatherData3) {
   const { current, hourly } = params
@@ -154,13 +164,16 @@ function weatherDataParse(params: WeatherData3) {
 
 // helper to refresh every piece of data
 async function updateWeather(c: string, u: UnitType) {
-  const location = await fetchLocationByCity(c)
-  console.log('Fetched location data:', location)
-  const data = await fetchWeatherByCoords(location.lat, location.lon, u)
-  console.log('Fetched weather data:', data)
-
-  if (data !== undefined) {
+  isLoading.value = true
+  weatherError.value = null
+  try {
+    // 1. 先根據城市名稱取得經緯度
+    const location = await fetchLocationByCity(c)
+    // 2. 再根據經緯度取得天氣資料
+    const data = await fetchWeatherByCoords(location.lat, location.lon, u)
+    // 3. 解析天氣資料並更新 state
     const parsed = weatherDataParse(data)
+
     city.value = c
     unit.value = parsed.unit
     temp.value = parsed.temp
@@ -171,24 +184,18 @@ async function updateWeather(c: string, u: UnitType) {
     date.value = parsed.date
     dayWeek.value = parsed.dayWeek
     icon.value = parsed.icon
-    return
+  } catch (err: unknown) {
+    console.error('updateWeather failed', err)
+    weatherError.value = err instanceof Error
+      ? { status: (err as { status?: number }).status ?? null, message: err.message }
+      : { status: null, message: String(err) }
+  } finally {
+    isLoading.value = false
   }
+}
 
-  alert(`Failed to fetch weather data for ${c}. Please Check the city name and try again.`)
-
-  const { current, hourly: newHourly, daily: newDaily, stats: newStats } = getMockWeather(c, u)
-
-  // keep city.value in sync so onSearch or other UI reflects canonical name
-  city.value = current.city
-  country.value = current.country
-  date.value = current.date
-  icon.value = current.icon
-  temp.value = current.temp
-  unit.value = current.unit
-
-  hourly.value = newHourly
-  daily.value = newDaily
-  stats.value = newStats
+function onRetry() {
+  updateWeather(city.value, unitType.value)
 }
 
 // initial load
