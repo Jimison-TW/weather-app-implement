@@ -3,26 +3,34 @@
     <header class="header">
       <div class="title">Hourly forecast</div>
       <slot name="controls">
-        <select class="day-select" aria-label="Select day">
+        <div v-if="loading" class="day-select-skeleton" aria-hidden="true">– ∨</div>
+        <select v-else class="day-select" aria-label="Select day">
           <option v-for="d in days" :key="d" :value="d">{{ d }}</option>
         </select>
       </slot>
     </header>
 
     <div class="list" role="list">
-      <HourlyCard v-for="h in items" :key="h.time" :time="h.time" :icon="h.icon" :temp="h.temp" :unit="h.unit" />
+      <template v-if="loading">
+        <HourlyCardSkeleton v-for="i in 8" :key="i" />
+      </template>
+      <template v-else>
+        <HourlyCard v-for="h in items" :key="h.time" :time="h.time" :icon="h.icon" :temp="h.temp" :unit="h.unit" />
+      </template>
     </div>
   </aside>
 </template>
 
 <script setup lang="ts">
 import HourlyCard from './HourlyCard.vue'
+import HourlyCardSkeleton from './skeleton/HourlyCardSkeleton.vue'
 import type { HourItem } from '@/const/interface'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const props = withDefaults(defineProps<{ items?: HourItem[]; days?: string[] }>(), {
+const props = withDefaults(defineProps<{ items?: HourItem[]; days?: string[]; loading?: boolean }>(), {
   items: () => [],
   days: () => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+  loading: false,
 })
 </script>
 
@@ -56,6 +64,16 @@ const props = withDefaults(defineProps<{ items?: HourItem[]; days?: string[] }>(
   padding: 6px 10px;
   border-radius: 8px;
   font-size: 13px;
+}
+
+.day-select-skeleton {
+  background: $neutral-700;
+  color: $neutral-300;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  user-select: none;
 }
 
 .list {

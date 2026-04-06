@@ -52,7 +52,7 @@
         </div>
 
         <div class="right-column">
-          <HourlyForecast :items="hourly" :days="[dayWeek]" />
+          <HourlyForecast :items="hourly" :days="[dayWeek]" :loading="isLoading" />
         </div>
       </section>
     </main>
@@ -205,7 +205,7 @@ async function updateWeather(c: string, u: UnitType) {
       ? { status: (err as { status?: number }).status ?? null, message: err.message }
       : { status: null, message: String(err) }
   } finally {
-    // isLoading.value = false
+    isLoading.value = false
   }
 }
 
