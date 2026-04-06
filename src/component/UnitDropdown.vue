@@ -80,9 +80,15 @@ const onToggleUnit = () => {
     margin: 0 5px;
   }
 
+  img {
+    width: 16px;
+    height: 16px;
+  }
+
   /** 透過deep避免scoped影響，透過>來對直接子代進行調整 */
   :deep(> span) {
     display: inline-flex;
+    align-items: center;
   }
 }
 
