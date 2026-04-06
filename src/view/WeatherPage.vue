@@ -40,7 +40,12 @@
             </template> -->
             <template #default>
               <div class="daily-list">
-                <DailyCard v-for="(d, i) in daily" :key="i" :day="d.day" :icon="d.icon" :high="d.high" :low="d.low" />
+                <template v-if="isLoading">
+                  <DailyCardSkeleton v-for="i in 7" :key="i" />
+                </template>
+                <template v-else>
+                  <DailyCard v-for="(d, i) in daily" :key="i" :day="d.day" :icon="d.icon" :high="d.high" :low="d.low" />
+                </template>
               </div>
             </template>
           </DailyForecast>
@@ -65,6 +70,7 @@ import StatCard from '@/component/StatCard.vue'
 import StatCardSkeleton from '@/component/skeleton/StatCardSkeleton.vue'
 import DailyForecast from '@/component/DailyForecast.vue'
 import DailyCard from '@/component/DailyCard.vue'
+import DailyCardSkeleton from '@/component/skeleton/DailyCardSkeleton.vue'
 import HourlyForecast from '@/component/HourlyForecast.vue'
 import type { HourItem, DailyItem, Stats } from '@/const/interface'
 import { UnitType } from '@/const/type'
