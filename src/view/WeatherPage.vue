@@ -14,17 +14,24 @@
         <SearchBar @search="onSearch" />
       </div>
 
-      <div v-if="isLoading" class="status-overlay">Loading...</div>
-
-      <section v-else class="layout">
+      <section class="layout">
         <div class="left-column">
-          <CityBoard :city="city" :country="country" :date="date" :icon="icon" :temp="temp" />
+          <CityBoardSkeleton v-if="isLoading" />
+          <CityBoard v-else :city="city" :country="country" :date="date" :icon="icon" :temp="temp" />
 
           <div class="stats-row">
-            <StatCard label="Feels Like" :value="stats.feelsLike" :unit="unit" />
-            <StatCard label="Humidity" :value="stats.humidity" unit="%" />
-            <StatCard label="Wind" :value="stats.wind" :unit="stats.windUnit" />
-            <StatCard label="Precipitation" :value="stats.precipitation" :unit="stats.precipUnit" />
+            <template v-if="isLoading">
+              <StatCardSkeleton label="Feels Like" />
+              <StatCardSkeleton label="Humidity" />
+              <StatCardSkeleton label="Wind" />
+              <StatCardSkeleton label="Precipitation" />
+            </template>
+            <template v-else>
+              <StatCard label="Feels Like" :value="stats.feelsLike" :unit="unit" />
+              <StatCard label="Humidity" :value="stats.humidity" unit="%" />
+              <StatCard label="Wind" :value="stats.wind" :unit="stats.windUnit" />
+              <StatCard label="Precipitation" :value="stats.precipitation" :unit="stats.precipUnit" />
+            </template>
           </div>
 
           <DailyForecast>
@@ -33,14 +40,19 @@
             </template> -->
             <template #default>
               <div class="daily-list">
-                <DailyCard v-for="(d, i) in daily" :key="i" :day="d.day" :icon="d.icon" :high="d.high" :low="d.low" />
+                <template v-if="isLoading">
+                  <DailyCardSkeleton v-for="i in 7" :key="i" />
+                </template>
+                <template v-else>
+                  <DailyCard v-for="(d, i) in daily" :key="i" :day="d.day" :icon="d.icon" :high="d.high" :low="d.low" />
+                </template>
               </div>
             </template>
           </DailyForecast>
         </div>
 
         <div class="right-column">
-          <HourlyForecast :items="hourly" :days="[dayWeek]" />
+          <HourlyForecast :items="hourly" :days="[dayWeek]" :loading="isLoading" />
         </div>
       </section>
     </main>
@@ -53,9 +65,12 @@ import AppHeader from '@/component/AppHeader.vue'
 import SearchBar from '@/component/SearchBar.vue'
 import WeatherError from '@/component/WeatherError.vue'
 import CityBoard from '@/component/CityBoard.vue'
+import CityBoardSkeleton from '@/component/skeleton/CityBoardSkeleton.vue'
 import StatCard from '@/component/StatCard.vue'
+import StatCardSkeleton from '@/component/skeleton/StatCardSkeleton.vue'
 import DailyForecast from '@/component/DailyForecast.vue'
 import DailyCard from '@/component/DailyCard.vue'
+import DailyCardSkeleton from '@/component/skeleton/DailyCardSkeleton.vue'
 import HourlyForecast from '@/component/HourlyForecast.vue'
 import type { HourItem, DailyItem, Stats } from '@/const/interface'
 import { UnitType } from '@/const/type'
